@@ -138,34 +138,51 @@ restartBtn.onclick = ()=>{
   
 replayBtn.onclick = ()=>{
     playBoard.classList.add("show");
+    playBoard.style.pointerEvents = "auto"; 
     resultBox.classList.remove("show");
 }
 
-
-previousBtn.addEventlistener('click', showPreviousMove);
-nextBtn.addEventListener('click', showNextMove);
 exitBtn.addEventListener('click', reloadPage);
+function reloadPage() {
+    location.reload(); // reload the page to start a new game
+    console.log("reload");
+  }
 
-function showPreviousMove() {
+  let currentMove = 0; //initialize current move counter to 0
+
+  previousBtn.addEventListener('click', function(showPreviousMove) {
+    if (currentMove > 0) { //check if there are previous moves available
+      currentMove--; //decrement the current move counter
+      updateBoard(currentMove); //update the UI to reflect the previous move
+    }
+  });
+
+  function showPreviousMove() { 
     // check if there is a previous move
-    if (currentMove > 0) {
+    if (currentMove > 0) { 
       currentMove--; // decrement current move index
-      drawBoard(gameMoves[currentMove]); // draw board for current move
-      // enable next button since there is at least one more move
-      nextBtn.disabled = false;
+      updateMove(currentMove); // update game board with previous move
+      console.log("previous");
     }
-    // disable previous button if we've reached the first move
-    if (currentMove === 0) {
-      previousBtn.disabled = true;
-    }
-    console.log("previous");
   }
   
+  function updateBoard(move) {
+    //update the UI to reflect the move at the specified index in the moves array
+    //you can access the move using moves[move]
+  }
+  
+  nextBtn.addEventListener('click', function(showNextMove) {
+    if (currentMove < moves.length - 1) { //check if there are next moves available
+      currentMove++; //increment the current move counter
+      updateBoard(currentMove); //update the UI to reflect the next move
+    }
+  });
+
   function showNextMove() {
     // check if there is a next move
-    if (currentMove < gameMoves.length - 1) {
+    if (currentMove < gameMoves.length - 1) { 
       currentMove++; // increment current move index
-      drawBoard(gameMoves[currentMove]); // draw board for current move
+      updateMove(currentMove); // update game board with next move
       // enable previous button since there is at least one previous move
       previousBtn.disabled = false;
     }
@@ -173,11 +190,4 @@ function showPreviousMove() {
     if (currentMove === gameMoves.length - 1) {
       nextBtn.disabled = true;
     }
-    console.log("next");
-  }
-
-  function reloadPage() {
-    location.reload();
-    console.log("reload");
-  }
-
+}
